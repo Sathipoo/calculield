@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <!-- <script src="https://d3js.org/d3.v4.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>Assignment for PayPay</title>
+</head>
+
+<body>
+
+    <div class="container-fluid text-center">
+        <br>
+        <br>
+        <br>
+        <div class="card m-5">
+            <form action="/begin_select" method="post" onsubmit="return checkForm(this);">
+
+                <h2 class="m-5"> Enter the stream sample data</h2>
+                <div class="text-left m-5">
+                    <h6>Samples</h6>
+                    {% for val in samples -%}
+                    <li>{{ val }}</li>
+                    {% endfor %}
+                </div>
+                <input name="select_map" type="text" class="form-control m-5" style="width: 80%;" placeholder="Data">
+                <br>
+                <button type="submit" class="btn btn-info btn-lg mx-5">Start</button>
+
+                <br>
+                <br>
+
+
+            </form>
+            <div id='result_part' class="m-5">
+                <div>
+                    {{ data }}
+                </div>
+                <br>
+                <div class="card">
+                    {% for intf in res -%} {{ intf }}
+                    <br> {% endfor %}
+                </div>
+                <br>
+                <br>
+                <h5>Plotting the Data</h5>
+                <div>
+                    <br>
+                    <p id="x_data_str"> {{x_data}}</p>
+                    <br>
+                    <p id="y_data_str"> {{y_data}}</p>
+                    <br>
+                </div>
+                <div class="card">
+                    <!-- <div id="my_dataviz"></div> -->
+                    <canvas id="myChart" style="width:100%"></canvas>
+
+                </div>
+            </div>
+            <br>
+
+            <br>
+            <br>
+        </div>
+    </div>
+    <footer class="footer m-5 text-center">
+        <h6 class="text-info">Submitted by Sathish kumar D M | +91 90666 11856 | sathiglaads@gmail.com</h6>
+    </footer>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <!-- <script src="{{ url_for('static',filename='js/myjs.js') }}"></script> -->
+    <script>
+        var x_data = document.getElementById('x_data_str').innerHTML
+        var y_data = document.getElementById('y_data_str').innerHTML
+
+        // var xValues = [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150];
+        var xValues = JSON.parse(x_data);
+
+        // var yValues = [7, 8, 8, 9, 9, 9, 10, 11, 14, 14, 15];
+        var yValues = JSON.parse(y_data);
+
+        new Chart("myChart", {
+            type: "line",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    fill: false,
+                    lineTension: 0,
+                    backgroundColor: "rgba(0,0,255,1.0)",
+                    borderColor: "rgba(0,0,255,0.1)",
+                    data: yValues
+                }]
+            },
+            options: {
+                legend: {
+                    display: false
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            min: Math.min(...yValues),
+                            max: Math.max(...yValues)
+                        }
+                    }],
+                }
+            }
+        });
+    </script>
+    <script>
+        function checkForm(form) {
+            var mydat = form.select_map.value.trim()
+            if (mydat == "") {
+                alert("Error: Data cannot be blank!");
+                form.select_map.focus();
+                return false;
+            } else if (!mydat.includes("?")) {
+                alert("Error: Data cannot be with out a ? (show string).\nTry:" + mydat + "?");
+                form.select_map.focus();
+                return false;
+            } else {
+
+                return true
+
+            }
+        }
+    </script>
+</body>
+
+</html>
